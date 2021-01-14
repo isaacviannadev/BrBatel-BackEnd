@@ -1,32 +1,24 @@
-import { uuid } from 'uuidv4';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity('items')
 class Item {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
   itemName: string;
 
+  @Column('int2')
   amountCurrent: number;
 
+  @Column('int2')
   amountMinimum: number;
 
+  @Column('numeric')
   priceCost: string;
 
+  @Column('numeric')
   priceSell: string;
-
-  constructor({
-    itemName,
-    amountCurrent,
-    amountMinimum,
-    priceCost,
-    priceSell,
-  }: Omit<Item, 'id'>) {
-    this.id = uuid();
-    this.itemName = itemName;
-    this.amountCurrent = amountCurrent;
-    this.amountMinimum = amountMinimum;
-    this.priceCost = priceCost;
-    this.priceSell = priceSell;
-  }
 }
 
 export default Item;

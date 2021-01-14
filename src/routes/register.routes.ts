@@ -1,18 +1,19 @@
 import { Router } from 'express';
+import { getCustomRepository } from 'typeorm';
 
 import ItemsRepository from '../repositories/ItemsRepository';
 import RegisterItemService from '../services/RegisterItemService';
 
 const registerRouter = Router();
-const itemsRepository = new ItemsRepository();
 
-registerRouter.get('/', (req, res) => {
-  const items = itemsRepository.all();
+registerRouter.get('/', async (req, res) => {
+  const itemsRepository = getCustomRepository(ItemsRepository);
+  const items = await itemsRepository.find();
 
   return res.json(items);
 });
 
-registerRouter.post('/', (req, res) => {
+registerRouter.post('/', async (req, res) => {
   try {
     const {
       itemName,
@@ -22,9 +23,9 @@ registerRouter.post('/', (req, res) => {
       priceSell,
     } = req.body;
 
-    const registerItem = new RegisterItemService(itemsRepository);
+    const registerItem = new RegisterItemService();
 
-    const item = registerItem.execute({
+    const item = await registerItem.execute({
       itemName,
       amountCurrent,
       amountMinimum,

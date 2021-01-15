@@ -19,6 +19,9 @@ class Item {
 
   @Column('numeric')
   priceSell: string;
+
+  @Column()
+  image: string;
 }
 
 export default Item;

@@ -6,6 +6,7 @@ import uploadConfig from '../config/upload';
 
 import ItemsRepository from '../repositories/ItemsRepository';
 import RegisterItemService from '../services/RegisterItemService';
+import UpdateItemImageService from '../services/UpdateItemImageService';
 
 import ensureAuth from '../middlewares/ensureAuth';
 
@@ -29,6 +30,7 @@ registerRouter.post('/', async (req, res) => {
       amountMinimum,
       priceCost,
       priceSell,
+      image,
     } = req.body;
 
     const registerItem = new RegisterItemService();
@@ -39,6 +41,7 @@ registerRouter.post('/', async (req, res) => {
       amountMinimum,
       priceCost,
       priceSell,
+      image,
     });
 
     return res.json(item);
@@ -47,8 +50,22 @@ registerRouter.post('/', async (req, res) => {
   }
 });
 
-registerRouter.patch('/image', upload.single('image'), async (req, res) => {
-  return res.json({ ok: true });
+registerRouter.patch('/image/:id', upload.single('image'), async (req, res) => {
+  const itemId = req.params.id;
+
+  const fileImage = req.file.filename;
+  try {
+    const updateItemImage = new UpdateItemImageService();
+
+    const item = await updateItemImage.execute({
+      item_id: itemId,
+      imageFilename: fileImage,
+    });
+
+    return res.json(item);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
 });
 
 export default registerRouter;

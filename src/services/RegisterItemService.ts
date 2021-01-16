@@ -9,6 +9,7 @@ interface Request {
   amountMinimum: number;
   priceCost: string;
   priceSell: string;
+  image: string;
 }
 
 class RegisterItemService {
@@ -18,6 +19,7 @@ class RegisterItemService {
     amountMinimum,
     priceCost,
     priceSell,
+    image,
   }: Request): Promise<Item> {
     const itemsRepository = getCustomRepository(ItemsRepository);
 
@@ -33,6 +35,7 @@ class RegisterItemService {
       amountMinimum,
       priceCost,
       priceSell,
+      image,
     });
 
     await itemsRepository.save(item);

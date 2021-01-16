@@ -21,7 +21,7 @@ class AuthenticateUsersService {
     }
 
     if (password !== user.password) {
-      throw new Error('Incorrect credentials - try again');
+      throw new Error('Incorrect e credentials - try again');
     }
 
     return { user };

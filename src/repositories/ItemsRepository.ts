@@ -10,6 +10,18 @@ class ItemsRepository extends Repository<Item> {
 
     return findItem || null;
   }
+
+  public async findById(id: string): Promise<Item | null> {
+    const findItem = await this.findOne({ where: { id } });
+
+    return findItem || null;
+  }
+
+  public async deleteOne(id: string): Promise<Item | null> {
+    const findItem = await this.findOne({ where: { id } });
+
+    return findItem || null;
+  }
 }
 
 export default ItemsRepository;

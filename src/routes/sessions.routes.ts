@@ -12,10 +12,6 @@ sessionsRouter.post('/', async (req, res) => {
 
     const { user } = await authenticateUser.execute({ email, password });
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    delete user.password;
-
     return res.json({ user });
   } catch (err) {
     return res.status(400).json({ error: err.message });

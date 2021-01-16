@@ -4,6 +4,9 @@ import { getCustomRepository } from 'typeorm';
 import multer from 'multer';
 import uploadConfig from '../config/upload';
 
+import ItemController from '../controllers/ItemController';
+import Item from '../models/item';
+
 import ItemsRepository from '../repositories/ItemsRepository';
 import RegisterItemService from '../services/RegisterItemService';
 import UpdateItemImageService from '../services/UpdateItemImageService';
@@ -12,6 +15,8 @@ import ensureAuth from '../middlewares/ensureAuth';
 
 const registerRouter = Router();
 registerRouter.use(ensureAuth);
+
+const itemController = new ItemController();
 
 const upload = multer(uploadConfig);
 
@@ -65,6 +70,22 @@ registerRouter.patch('/image/:id', upload.single('image'), async (req, res) => {
     return res.json(item);
   } catch (err) {
     return res.status(400).json({ error: err.message });
+  }
+});
+
+registerRouter.get('/item/:id', itemController.show);
+
+registerRouter.put('/item/', itemController.update);
+
+registerRouter.delete('/item/:id', async (req, res) => {
+  const item_id = req.params.id;
+  try {
+    const itemsRepository = getCustomRepository(ItemsRepository);
+    const item = await itemsRepository.delete(item_id);
+
+    return res.json(item);
+  } catch (err) {
+    return res.status(404).json({ error: err.message });
   }
 });
 

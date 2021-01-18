@@ -5,7 +5,6 @@ import multer from 'multer';
 import uploadConfig from '../config/upload';
 
 import ItemController from '../controllers/ItemController';
-import Item from '../models/item';
 
 import ItemsRepository from '../repositories/ItemsRepository';
 import RegisterItemService from '../services/RegisterItemService';

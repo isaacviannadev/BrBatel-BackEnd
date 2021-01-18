@@ -1,3 +1,9 @@
+import { getRepository } from 'typeorm';
+import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
+
+import authConfig from '../config/auth';
+
 import User from '../models/user';
 
 interface Request {
@@ -7,24 +13,33 @@ interface Request {
 
 interface Response {
   user: User;
+  token: string;
 }
 
 class AuthenticateUsersService {
   public async execute({ email, password }: Request): Promise<Response> {
-    const user = {
-      email: 'luke@shop.com',
-      password: '123456',
-    };
+    const usersRepository = getRepository(User);
 
-    if (email !== user.email) {
+    const user = await usersRepository.findOne({ where: { email } });
+
+    if (!user) {
       throw new Error('Incorrect credentials - try again');
     }
 
-    if (password !== user.password) {
-      throw new Error('Incorrect e credentials - try again');
+    const passMatched = await compare(password, user.password);
+
+    if (!passMatched) {
+      throw new Error('Incorrect credentials - try again');
     }
 
-    return { user };
+    const { secret, expiresIn } = authConfig.jwt;
+
+    const token = sign({}, secret, {
+      subject: user.id,
+      expiresIn,
+    });
+
+    return { user, token };
   }
 }
 export default AuthenticateUsersService;

@@ -26,7 +26,7 @@ registerRouter.get('/', async (req, res) => {
   return res.json(items);
 });
 
-registerRouter.post('/register', async (req, res) => {
+registerRouter.post('/', async (req, res) => {
   console.log(req.headers);
 
   try {

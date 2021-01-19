@@ -26,7 +26,9 @@ registerRouter.get('/', async (req, res) => {
   return res.json(items);
 });
 
-registerRouter.post('/', async (req, res) => {
+registerRouter.post('/register', async (req, res) => {
+  console.log(req.headers);
+
   try {
     const {
       itemName,
@@ -72,7 +74,7 @@ registerRouter.patch('/image/:id', upload.single('image'), async (req, res) => {
   }
 });
 
-registerRouter.get('/item/:id', itemController.show);
+registerRouter.get('/:id', itemController.show);
 
 registerRouter.put('/item/', itemController.update);
 

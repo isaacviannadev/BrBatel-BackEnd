@@ -16,8 +16,6 @@ export default function ensureAuth(
 ): void {
   const authHeader = req.headers.authorization;
 
-  console.log(authHeader);
-
   if (!authHeader) {
     throw new Error('Token is missing');
   }

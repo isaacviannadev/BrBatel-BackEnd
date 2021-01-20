@@ -13,6 +13,7 @@ import UpdateItemService from '../services/UpdateItemService';
 
 import ensureAuth from '../middlewares/ensureAuth';
 import AddAmountService from '../services/AddAmountService';
+import TotalsService from '../services/TotalsService';
 
 const registerRouter = Router();
 registerRouter.use(ensureAuth);
@@ -76,6 +77,15 @@ registerRouter.patch('/item/:id', async (req, res) => {
       error: err.message,
     });
   }
+});
+
+registerRouter.get('/balance', async (req, res) => {
+  const itensRepository = getCustomRepository(ItemsRepository);
+  const itens = await itensRepository.find();
+  const getBalance = new TotalsService();
+  const balance = await getBalance.execute(itens);
+
+  return res.json({ balance });
 });
 
 registerRouter.patch('/image/:id', upload.single('image'), async (req, res) => {

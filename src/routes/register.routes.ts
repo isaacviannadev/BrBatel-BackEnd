@@ -9,8 +9,10 @@ import ItemController from '../controllers/ItemController';
 import ItemsRepository from '../repositories/ItemsRepository';
 import RegisterItemService from '../services/RegisterItemService';
 import UpdateItemImageService from '../services/UpdateItemImageService';
+import UpdateItemService from '../services/UpdateItemService';
 
 import ensureAuth from '../middlewares/ensureAuth';
+import AddAmountService from '../services/AddAmountService';
 
 const registerRouter = Router();
 registerRouter.use(ensureAuth);
@@ -56,6 +58,26 @@ registerRouter.post('/', async (req, res) => {
   }
 });
 
+registerRouter.patch('/item/:id', async (req, res) => {
+  try {
+    const { addAmount } = req.body;
+    const { id } = req.params;
+
+    const changeAmount = new AddAmountService();
+
+    const newItem = await changeAmount.execute({
+      id,
+      addAmount,
+    });
+
+    return res.json(newItem);
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message,
+    });
+  }
+});
+
 registerRouter.patch('/image/:id', upload.single('image'), async (req, res) => {
   const itemId = req.params.id;
 
@@ -77,6 +99,32 @@ registerRouter.patch('/image/:id', upload.single('image'), async (req, res) => {
 registerRouter.get('/:id', itemController.show);
 
 registerRouter.put('/item/', itemController.update);
+registerRouter.put('/item/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      itemName,
+      amountCurrent,
+      amountMinimum,
+      priceCost,
+      priceSell,
+    } = req.body;
+    const updateItem = new UpdateItemService();
+    const newProduct = await updateItem.execute({
+      id,
+      itemName,
+      amountCurrent,
+      amountMinimum,
+      priceCost,
+      priceSell,
+    });
+
+    return res.json(newProduct);
+  } catch (err) {
+    // console.log('Erro', err.message);
+    return res.status(400).json({ error: err.message });
+  }
+});
 
 registerRouter.delete('/item/:id', async (req, res) => {
   const item_id = req.params.id;
